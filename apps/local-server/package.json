@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "@expo-system/app-local-server",
+  "version": "1.0.0",
+  "main": "./index.tsx",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "bundle": "serve ./src --cors"
+  },
+  "dependencies": {
+    "@expo-system/babel": "workspace:*",
+    "@expo-system/core": "workspace:*",
+    "expo": "~49.0.13",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.72.5",
+    "react-native-web": "~0.19.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.14",
+    "serve": "^14.2.1"
+  }
+}
