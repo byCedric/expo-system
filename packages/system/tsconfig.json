@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "allowJs": true,
+    "noEmit": true,
+    "noImplicitAny": false
+  },
+  "include": ["./src"]
+}
