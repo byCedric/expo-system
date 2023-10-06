@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "@expo-system/monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
