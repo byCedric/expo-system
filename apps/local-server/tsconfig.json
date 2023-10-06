@@ -1,4 +1,16 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "http://localhost:3000/*": ["./src/*"],
+      "expo:*": [
+        "./node_modules/*",
+        "../../node_modules/*",
+        "./node_modules/expo-*",
+        "../../node_modules/expo-*",
+      ]
+    },
+    "allowImportingTsExtensions": true
+  },
 }
