@@ -18,7 +18,7 @@ import './features/fetch';
 import './features/evaluate';
 import './features/instantiate';
 import './features/registry';
-import './features/named-register';
+// import './features/named-register';
 
 // Initialize all extras (disabled for now, to allow customizing the core in apps)
 // import './extras/babel-transpile';
