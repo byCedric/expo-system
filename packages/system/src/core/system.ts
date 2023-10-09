@@ -13,13 +13,17 @@
  *
  * Core comes with no System.prototype.resolve or
  * System.prototype.instantiate implementations
+ *
+ * This fork is based on `systemjs@6.14.2`
+ * See: https://github.com/systemjs/systemjs/blob/6.14.2/src/system-core.js
  */
 import { hasSymbol } from './runtime';
-
 import { SystemError, errorMessageWithContext } from './errors';
 
 // Typescript declaration with the ability to extend in each feature file
 declare global { // TODO: make not-global
+  var System: SystemJS.System;
+
   namespace SystemJS {
     /** The evaluated and instantiated module reference */
     export type Module = any;
@@ -60,6 +64,8 @@ declare global { // TODO: make not-global
     export interface ModuleOptions {}
 
     export class System {
+      [REGISTRY]: Map<string, any>;
+
       /**
        * Loads a module by name taking an optional normalized parent URL argument.
        * @see https://github.com/systemjs/systemjs/blob/6.14.2/docs/api.md#systemimportid--parenturl---promisemodule
@@ -78,14 +84,12 @@ declare global { // TODO: make not-global
        * @see https://github.com/systemjs/systemjs/blob/6.14.2/docs/api.md#systemregisterdeps-declare
        */
       register(dependencies: ModuleId[], definition: Declaration, options?: ModuleOptions[]): void;
-      register(name: string, dependencies: ModuleId[], definition: Declaration, options?: ModuleOptions[]): void;
 
       /**
        * Return the last anonymous `System.register` registration.
        * This can be useful when evaluating a module definition.
        */
       getRegister(): ModuleDeclaration;
-      getRegister(name: string): ModuleDeclaration;
 
       // todo
       onload();
@@ -99,10 +103,10 @@ var toStringTag = hasSymbol && Symbol.toStringTag;
 var REGISTRY = hasSymbol ? Symbol() : '@';
 
 function SystemJS() {
-  this[REGISTRY] = {};
+  this[REGISTRY] = new Map();
 }
 
-var systemJSPrototype = SystemJS.prototype as typeof global.System;
+var systemJSPrototype = SystemJS.prototype as SystemJS.System;
 
 export const SystemPrototype = systemJSPrototype;
 
@@ -397,11 +401,5 @@ function postOrderExec(loader, load, seen) {
   }
 }
 
-// Export the singleton to avoid coding on the global object
+/** The systemjs singleton instance, both stored on `global.System` and exported as `System` */
 export const System: SystemJS.System = global.System = new SystemJS();
-
-declare namespace global {
-  var System: SystemJS.System;
-}
-
-
