@@ -48,8 +48,7 @@ const nextRegister = SystemPrototype.register;
 // @ts-expect-error Target signature provides too few arguments. Expected 4 or more, but got 3.ts(2322)
 SystemPrototype.register = function (id, dependencies, definition, options) {
   if (typeof id !== 'string') {
-    // @ts-expect-error Argument of type 'string[]' is not assignable to parameter of type 'string'.ts(2345)
-    return nextRegister.call(this, dependencies, definition, options);
+    return nextRegister.call(this, id, dependencies, definition);
   }
 
   const declaration = [dependencies, definition, options] as SystemJS.ModuleDeclaration;
@@ -59,10 +58,6 @@ SystemPrototype.register = function (id, dependencies, definition, options) {
     firstDeclaration = declaration;
     firstName = id;
   }
-  Promise.resolve().then(function () {
-    firstDeclaration = null;
-    firstName = null;
-  });
 
   // @ts-expect-error Argument of type 'string[]' is not assignable to parameter of type 'string'.ts(2345)
   return nextRegister.call(this, dependencies, definition, options);

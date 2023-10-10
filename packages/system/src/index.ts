@@ -1,15 +1,9 @@
-import { SystemPrototype } from './core/system';
-
-export { System } from './core/system';
+export { System, REGISTRY } from './core/system';
 
 // Initialize all core features
-import './features/resolve';
-import './features/fetch';
-import './features/evaluate';
-import './features/instantiate';
-import './features/registry';
-// import './features/named-register';
-
-// Initialize all extras (disabled for now, to allow customizing the core in apps)
-// import './extras/babel-transpile';
-// import './extras/snack-files';
+export * from './features/resolve';
+export * from './features/fetch';
+export * from './features/evaluate';
+export * from './features/instantiate';
+export * from './features/registry';
+export * from './features/named-register';

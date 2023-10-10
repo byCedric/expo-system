@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
-import { System } from '../../core/system';
-import '../registry';
+import { System } from '../../'; // Import the feature-populated system instance
 
 describe('get', () => {
   it('returns undefined for non-existing modules', () => {

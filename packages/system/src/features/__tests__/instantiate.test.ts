@@ -1,7 +1,6 @@
 import { afterAll, afterEach, expect, it, spyOn } from 'bun:test';
 
-import { System } from '../../core/system';
-import '../instantiate';
+import { System } from '../../'; // Import the feature-populated system instance
 
 const fetch = spyOn(System, 'fetch');
 const evaluate = spyOn(System, 'evaluateResponse');

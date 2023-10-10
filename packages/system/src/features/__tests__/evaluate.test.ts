@@ -1,7 +1,6 @@
 import { describe, expect, it, mock } from 'bun:test';
 
-import { System } from '../../core/system';
-import '../evaluate';
+import { System } from '../../'; // Import the feature-populated system instance
 
 describe('evaluateSource', () => {
   it('evaluates module declaration', () => {
@@ -86,8 +85,6 @@ describe('evaluateResponse', () => {
 
 /** Assert and evaluate the `register` by executing the module with an `_export` mock */
 function assertRegister(register: SystemJS.ModuleDeclaration) {
-  console.log(register);
-
   expect(register).toBeArray();
   expect(register[0]).toBeArray();
   expect(register[1]).toBeFunction();

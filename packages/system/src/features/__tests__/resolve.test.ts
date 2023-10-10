@@ -1,7 +1,6 @@
 import { expect, it } from 'bun:test';
 
-import { System } from '../../core/system';
-import '../resolve';
+import { System } from '../../'; // Import the feature-populated system instance
 
 // This feature only adds the `.resolve` hook, not the implementation
 it('throws unhandled by default', () => {

@@ -1,25 +1,24 @@
-import { afterEach, describe, expect, it, mock } from 'bun:test';
+import { describe, expect, it, mock } from 'bun:test';
 
-import { System } from '../../core/system';
-import { NAMED_REGISTRY, NAMED_ALIASES } from '../named-register';
-
-// Reset all named registrations after each test
-afterEach(() => {
-  System[NAMED_REGISTRY].clear();
-  System[NAMED_ALIASES].clear();
-});
+import { System } from '../../'; // Import the feature-populated system instance
 
 describe('register/getRegister', () => {
   it('allows register without name', () => {
-    System.register([], () => ({ execute() { } }));
-    expect(System.getRegister()).toBeArray();
+    System.register(['some-dep'], () => ({ execute() { } }));
+    const register = System.getRegister();
+    expect(register).toBeArray();
+    expect(register[0]).toEqual(['some-dep']);
+    expect(register[1]).toBeFunction();
   });
 
   it('allows register with name', () => {
-    const dependencies = [];
+    const dependencies = ['some-dep'];
     const definition = () => ({ execute() { } });
     System.register('some-name', dependencies, definition);
-    expect(System.getRegister('some-name')).toEqual([dependencies, definition]);
+    const register = System.getRegister();
+    expect(register).toBeArray();
+    expect(register[0]).toBe(dependencies);
+    expect(register[1]).toBe(definition);
   });
 
   it('only returns registry once', () => {
