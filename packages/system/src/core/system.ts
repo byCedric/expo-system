@@ -93,6 +93,7 @@ declare global { // TODO: make not-global
 
       // todo
       onload();
+      prepareImport(): void;
     }
   }
 }
@@ -109,6 +110,9 @@ function SystemJS() {
 var systemJSPrototype = SystemJS.prototype as SystemJS.System;
 
 export const SystemPrototype = systemJSPrototype;
+
+// Auto-fill this method, we dont use this in React Native
+SystemPrototype.prepareImport = function(){};
 
 systemJSPrototype.import = function (id, parentUrl, meta) {
   var loader = this;

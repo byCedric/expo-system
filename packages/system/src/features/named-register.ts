@@ -1,5 +1,7 @@
 import { System, SystemPrototype } from '../core/system';
 
+import './resolve';
+
 declare global {
   namespace SystemJS {
     interface System {
