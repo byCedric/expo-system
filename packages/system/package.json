@@ -5,6 +5,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
+    "test": "bun test --preload ./src/__tests__/setup.ts",
     "lint": "tsc --noEmit && echo 'Only typecheck'",
     "clean": "git clean -xdf ./build",
     "dev": "webpack",

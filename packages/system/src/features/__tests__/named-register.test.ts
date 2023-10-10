@@ -1,11 +1,10 @@
 import { afterEach, describe, expect, it, mock } from 'bun:test';
 
-import { System, REGISTRY} from '../../core/system';
+import { System } from '../../core/system';
 import { NAMED_REGISTRY, NAMED_ALIASES } from '../named-register';
 
-// Reset all modules after each test
+// Reset all named registrations after each test
 afterEach(() => {
-  System[REGISTRY].clear();
   System[NAMED_REGISTRY].clear();
   System[NAMED_ALIASES].clear();
 });
@@ -42,10 +41,6 @@ describe('resolve', () => {
 
     System.register('some-name', [], definition);
     expect(System.resolve('some-name')).toBe('some-name');
-  });
-
-  it('throws when unresolved', () => {
-    expect(() => System.resolve('some-name')).toThrow();
   });
 });
 

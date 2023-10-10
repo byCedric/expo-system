@@ -1,10 +1,7 @@
-import { afterEach, describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 
-import { System, REGISTRY } from '../../core/system';
+import { System } from '../../core/system';
 import '../registry';
-
-// Reset all modules after each test
-afterEach(() => System[REGISTRY].clear());
 
 describe('get', () => {
   it('returns undefined for non-existing modules', () => {
