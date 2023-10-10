@@ -52,7 +52,7 @@ SystemPrototype.register = function (id, dependencies, definition, options) {
   }
 
   const declaration = [dependencies, definition, options] as SystemJS.ModuleDeclaration;
-  this[NAMED_REGISTRY][id] = declaration;
+  this[NAMED_REGISTRY].set(id, declaration);
 
   if (!firstDeclaration) {
     firstDeclaration = declaration;
@@ -75,7 +75,7 @@ SystemPrototype.getRegister = function (id) {
   const register = nextGetRegister.call(this, id);
 
   if (firstName && id) {
-    this[NAMED_ALIASES][firstName] = id;
+    this[NAMED_ALIASES].set(firstName, id);
   }
 
   const result = firstDeclaration || register;
@@ -101,8 +101,8 @@ SystemPrototype.resolve = function (id, parentId, options) {
     // Prefer other existing resolve attempts over the `named-registry`
     return nextResolve.call(this, id, parentId, options);
   } catch (error) {
-    if (id in this[NAMED_REGISTRY]) {
-      return this[NAMED_ALIASES][id] || id;
+    if (this[NAMED_REGISTRY].has(id)) {
+      return this[NAMED_ALIASES].get(id) || id;
     }
 
     throw error;
@@ -111,10 +111,10 @@ SystemPrototype.resolve = function (id, parentId, options) {
 
 const nextInstantiate = SystemPrototype.instantiate;
 SystemPrototype.instantiate = function (id, parentId, options) {
-  const result = this[NAMED_REGISTRY][id];
+  const result = this[NAMED_REGISTRY].get(id);
   if (result) {
-    this[NAMED_REGISTRY][id] = null
-    return result;
+    this[NAMED_REGISTRY].delete(id);
+    return Promise.resolve(result);
   }
   return nextInstantiate.call(this, id, parentId, options);
 }

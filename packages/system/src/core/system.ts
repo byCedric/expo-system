@@ -100,8 +100,8 @@ declare global { // TODO: make not-global
 
 export { systemJSPrototype, REGISTRY };
 
-var toStringTag = hasSymbol && Symbol.toStringTag;
-var REGISTRY = hasSymbol ? Symbol() : '@';
+var toStringTag = Symbol.toStringTag;
+var REGISTRY = Symbol('registry');
 
 function SystemJS() {
   this[REGISTRY] = new Map();
@@ -163,7 +163,7 @@ systemJSPrototype.getRegister = function () {
 };
 
 export function getOrCreateLoad(loader, id, firstParentUrl, meta) {
-  var load = loader[REGISTRY][id];
+  var load = loader[REGISTRY].get(id);
   if (load) return load;
 
   var importerSetters = [] as SystemJS.DeclarationSetter[];
@@ -259,45 +259,46 @@ export function getOrCreateLoad(loader, id, firstParentUrl, meta) {
   if (!process.env.SYSTEM_BROWSER) linkPromise.catch(function () {});
 
   // Capital letter = a promise function
-  return (load = loader[REGISTRY][id] =
-    {
-      id: id,
-      // importerSetters, the setters functions registered to this dependency
-      // we retain this to add more later
-      i: importerSetters,
-      // module namespace object
-      n: ns,
-      // extra module information for import assertion
-      // shape like: { assert: { type: 'xyz' } }
-      m: meta,
+  load = {
+    id: id,
+    // importerSetters, the setters functions registered to this dependency
+    // we retain this to add more later
+    i: importerSetters,
+    // module namespace object
+    n: ns,
+    // extra module information for import assertion
+    // shape like: { assert: { type: 'xyz' } }
+    m: meta,
 
-      // instantiate
-      I: instantiatePromise,
-      // link
-      L: linkPromise,
-      // whether it has hoisted exports
-      h: false,
+    // instantiate
+    I: instantiatePromise,
+    // link
+    L: linkPromise,
+    // whether it has hoisted exports
+    h: false,
 
-      // On instantiate completion we have populated:
-      // dependency load records
-      d: undefined,
-      // execution function
-      e: undefined,
+    // On instantiate completion we have populated:
+    // dependency load records
+    d: undefined,
+    // execution function
+    e: undefined,
 
-      // On execution we have populated:
-      // the execution error if any
-      er: undefined,
-      // in the case of TLA, the execution promise
-      E: undefined,
+    // On execution we have populated:
+    // the execution error if any
+    er: undefined,
+    // in the case of TLA, the execution promise
+    E: undefined,
 
-      // On execution, L, I, E cleared
+    // On execution, L, I, E cleared
 
-      // Promise for top-level completion
-      C: undefined,
+    // Promise for top-level completion
+    C: undefined,
 
-      // parent instantiator / executor
-      p: undefined,
-    });
+    // parent instantiator / executor
+    p: undefined,
+  };
+  loader[REGISTRY].set(id, load);
+  return load;
 }
 
 function instantiateAll(loader, load, parent, loaded) {
