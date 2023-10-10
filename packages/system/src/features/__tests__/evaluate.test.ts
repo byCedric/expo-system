@@ -71,7 +71,7 @@ describe('evaluateResponse', () => {
   });
 
 
-  it('evaluate from response throws with unknown "content-type"', () => {
+  it('throws when evaluatingresponse with unknown "content-type"', () => {
     const response: any = {
       ok: true,
       headers: new Headers({ 'content-type': 'text/plain' }),
@@ -86,6 +86,8 @@ describe('evaluateResponse', () => {
 
 /** Assert and evaluate the `register` by executing the module with an `_export` mock */
 function assertRegister(register: SystemJS.ModuleDeclaration) {
+  console.log(register);
+
   expect(register).toBeArray();
   expect(register[0]).toBeArray();
   expect(register[1]).toBeFunction();
