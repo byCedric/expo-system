@@ -1,5 +1,5 @@
-import { SystemError } from '../core/errors';
 import { REGISTRY, System, SystemPrototype } from '../core/system';
+import { SystemError } from '../core/errors';
 
 declare global {
   namespace SystemJS {

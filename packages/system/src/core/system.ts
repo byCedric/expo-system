@@ -17,13 +17,10 @@
  * This fork is based on `systemjs@6.14.2`
  * See: https://github.com/systemjs/systemjs/blob/6.14.2/src/system-core.js
  */
-import { hasSymbol } from './runtime';
 import { SystemError, errorMessageWithContext } from './errors';
 
 // Typescript declaration with the ability to extend in each feature file
 declare global { // TODO: make not-global
-  var System: SystemJS.System;
-
   namespace SystemJS {
     /** The evaluated and instantiated module reference */
     export type Module = any;
@@ -406,5 +403,5 @@ function postOrderExec(loader, load, seen) {
   }
 }
 
-/** The systemjs singleton instance, both stored on `global.System` and exported as `System` */
-export const System: SystemJS.System = global.System = new SystemJS();
+/** The systemjs singleton instance */
+export const System = new SystemJS();
