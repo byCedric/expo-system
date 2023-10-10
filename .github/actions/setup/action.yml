@@ -1,0 +1,28 @@
+name: Setup
+description: Prepare and install everything for the repo
+
+inputs:
+  bun-version:
+    description: Version of bun to use
+    default: 1.x
+
+  node-version:
+    description: Version of Node to use
+    default: 18.x
+
+runs:
+  using: composite
+  steps:
+    - name: 🏗 Setup bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: ${{ inputs.bun-version }}
+
+    - name: 🏗 Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: 📦 Install dependencies
+      run: bun install
+      shell: bash

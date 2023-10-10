@@ -1,3 +1,4 @@
+import { SystemError } from '../core/errors';
 import { REGISTRY, System, SystemPrototype } from '../core/system';
 
 declare global {
@@ -10,7 +11,7 @@ declare global {
       /** Determine if the registry has the module registered */
       has(id: ModuleId): boolean;
       /** Remove the module from the registry */
-      delete(id: ModuleId): void;
+      delete(id: ModuleId): any; // TODO
 
       /** Share the exact same module instance with the systemjs emulation */
       share(id: ModuleId, module: Module): ReturnType<System['set']>;
@@ -58,6 +59,13 @@ SystemPrototype.has = function (id) {
 
 SystemPrototype.set = function (id, module) {
   let ns;
+
+  if (typeof module !== 'object' || Array.isArray(module)) {
+    throw new SystemError(
+      'INVALID_MODULE_INSTANCE',
+      '".set" received a non-object module, only objects are allowed'
+    );
+  }
 
   if (toStringTag && module[toStringTag] === 'Module') {
     ns = module;

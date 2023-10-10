@@ -4,7 +4,8 @@
     "rootDir": "./src",
     "allowJs": true,
     "noEmit": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "types": ["bun-types"]
   },
   "include": ["./src"]
 }

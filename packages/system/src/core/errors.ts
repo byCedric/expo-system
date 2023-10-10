@@ -5,5 +5,5 @@ export class SystemError extends Error {
 }
 
 export function errorMessageWithContext(message: string, context: { id: SystemJS.ModuleId, parentId?: SystemJS.ModuleId }) {
-  return `${message} "${context.id}" ${context.parentId ? ` parent: "${context.parentId}"` : ''}`;
+  return `${message} "${context.id}"${context.parentId ? ` parent: "${context.parentId}"` : ''}`;
 }

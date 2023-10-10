@@ -31,7 +31,7 @@ SystemPrototype.evaluateResponse = function (response, id, parentId, options) {
   }
 
   const system = this as typeof System;
-  const contentType = response.headers.get('content-type');
+  const contentType = (response.headers.get('content-type') || '').split(';', 1).pop();
 
   switch (contentType) {
     case 'text/javascript':
