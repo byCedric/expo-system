@@ -47,14 +47,14 @@ SystemPrototype.share = function (id, module) {
 };
 
 SystemPrototype.get = function (id) {
-  const load = this[REGISTRY][id];
+  const load = this[REGISTRY].get(id);
   if (load && load.e === null && !load.E) {
     return load.er ? undefined : load.n
   }
 };
 
 SystemPrototype.has = function (id) {
-  return !!this[REGISTRY][id];
+  return this[REGISTRY].has(id);
 };
 
 SystemPrototype.set = function (id, module) {
@@ -76,7 +76,7 @@ SystemPrototype.set = function (id, module) {
 
   var done = Promise.resolve(ns);
 
-  var load = this[REGISTRY][id] || (this[REGISTRY][id] = {
+  var load = this[REGISTRY].get(id) || {
     id: id,
     i: [],
     h: false,
@@ -84,7 +84,8 @@ SystemPrototype.set = function (id, module) {
     e: null,
     er: undefined,
     E: undefined
-  });
+  };
+  this[REGISTRY].set(id, load);
 
   if (load.e || load.E)
     return false;
@@ -101,7 +102,7 @@ SystemPrototype.set = function (id, module) {
 
 SystemPrototype.delete = function (id) {
   var registry = this[REGISTRY];
-  var load = registry[id];
+  var load = registry.get(id);
   // in future we can support load.E case by failing load first
   // but that will require TLA callbacks to be implemented
   if (!load || (load.p && load.p.e !== null) || load.E)
@@ -116,9 +117,9 @@ SystemPrototype.delete = function (id) {
       if (importerIndex !== -1)
         depLoad.i.splice(importerIndex, 1);
     });
-  delete registry[id];
+  registry.delete(id);
   return function () {
-    var load = registry[id];
+    var load = registry.get(id);
     if (!load || !importerSetters || load.e !== null || load.E)
       return false;
     // add back the old setters
