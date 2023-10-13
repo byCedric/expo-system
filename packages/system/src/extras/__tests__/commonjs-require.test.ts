@@ -41,6 +41,70 @@ describe('require', () => {
     expect(System.require('name-registered-module-2')).toEqual({ test: 'test' });
   });
 
+  it('returns name-registered module with preloaded dependency', () => {
+    System.set('preloaded-module-1', { test: 'test' });
+    System.register('name-registered-module', ['preloaded-module-1'], (_export) => {
+      var test;
+      return {
+        setters: [(_dependency) => { test = _dependency.test }],
+        execute() {
+          _export('test', test);
+        }
+      }
+    });
+
+    expect(System.require('name-registered-module')).toEqual({ test: 'test' });
+  });
+
+  it('returns name-registered module with chained registered and preloaded dependency', () => {
+    System.set('preloaded-module-1', { test: 'hello' });
+    System.register('name-registered-module-1', ['preloaded-module-1'], (_export) => {
+      var test;
+      return {
+        setters: [(_dependency) => { test = _dependency.test }],
+        execute() {
+          _export('default', test);
+        },
+      };
+    });
+
+    System.register('name-registered-module-2', ['name-registered-module-1'], (_export) => {
+      var test;
+      return {
+        setters: [(_dependency) => { test = _dependency.default }],
+        execute() {
+          _export('test', test);
+        }
+      }
+    });
+
+    expect(System.require('name-registered-module-2')).toEqual({ test: 'hello' });
+  });
+
+  it('returns name-registered module with spread registered and preloaded dependency', () => {
+    System.set('preloaded-module-1', { test: 'hello' });
+    System.register('name-registered-module-1', [], (_export) => ({
+      execute() {
+        _export('default', 'world');
+      }
+    }));
+
+    System.register('name-registered-module-2', ['preloaded-module-1', 'name-registered-module-1'], (_export) => {
+      var hello, world;
+      return {
+        setters: [
+          (_dependency) => { hello = _dependency.test },
+          (_dependency) => { world = _dependency.default },
+        ],
+        execute() {
+          _export('test', `${hello} ${world}`);
+        }
+      }
+    });
+
+    expect(System.require('name-registered-module-2')).toEqual({ test: 'hello world' });
+  });
+
   it('throws when module is loaded remotely', () => {
     const moduleId = 'https://raw.githubusercontent.com/expo/expo/main/packages/expo/bundledNativeModules.json';
     const resolve = spyOn(System, 'resolve').mockImplementation((id) => id);

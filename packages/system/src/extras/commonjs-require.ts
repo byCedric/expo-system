@@ -130,9 +130,7 @@ function instantiateModule(loader: SystemJS.System, id: string, registration: Sy
       // Register the setter from the original module to the dependency
       dependencyLoad.i.push(setter);
       // Invoke the setter within the original module namespace
-      if (dependencyLoad.h) {
-        setter(dependencyLoad.n);
-      }
+      setter(dependencyLoad.n);
     }
 
     dependencyLoads.push(dependencyLoad);
