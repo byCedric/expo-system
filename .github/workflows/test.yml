@@ -26,6 +26,6 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: 🧪 Test packages/${{ matrix.package }}
-        run: bun test
+        run: bun run test
         working-directory: packages/${{ matrix.package }}
 
