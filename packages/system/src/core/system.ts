@@ -28,7 +28,7 @@ declare global { // TODO: make not-global
     export type ModuleId = string;
 
     /** The systemjs module declaration function, used to instantiate and emulate modules */
-    export type Declaration = (_exports: DeclarationExport, _context: DeclarationContext) => ({
+    export type Declaration = (_exports: DeclarationExport, _context?: DeclarationContext) => ({
       setters?: DeclarationSetter[];
       execute: DeclarationExecutor;
     });
@@ -39,8 +39,7 @@ declare global { // TODO: make not-global
 
     /** The systemjs module emulation `_exports` function, used to bind exported values from the modules */
     export interface DeclarationExport {
-      (exports: Record<string, any>): void;
-      (exportName: string, value: any): void;
+      (exportName: Record<string, any> | string, value?: any): void;
     }
     /** The systemjs module emulation `_context` object, used to emulate ESM functionality like `import.meta` */
     export interface DeclarationContext {
@@ -60,8 +59,35 @@ declare global { // TODO: make not-global
     /** The module options object, passed through the systemjs pipeline */
     export interface ModuleOptions {}
 
+    /** The full module description tracked inside the registry */
+    export interface ModuleLoad<T = any> {
+      id: ModuleId;
+      /** Setter functions registered to this dependency, we retain this to add more later */
+      i: DeclarationSetter[];
+      /** The actual exported module content or namespace object */
+      n: T;
+      /** Extra module information for import assertion, shape like `{ assert: { type: 'xyz' } }` */
+      m: any;
+
+      /** The full instantiate promise of this module */
+      I?: Promise<any>; // todo
+      /** The link promise of this module */
+      L?: Promise<any>; // todo
+      /** Wether this module has hoisted exports */
+      h: boolean;
+
+      d?: any;
+      e?: any;
+
+      er?: any;
+      E?: any;
+
+      C?: any;
+      p?: any;
+    }
+
     export class System {
-      [REGISTRY]: Map<string, any>;
+      [REGISTRY]: Map<string, ModuleLoad>;
 
       /**
        * Loads a module by name taking an optional normalized parent URL argument.
